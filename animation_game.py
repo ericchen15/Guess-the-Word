@@ -53,7 +53,7 @@ introText.append('blue: tongue')
 introText.append('red: mandible')
 introText.append('green: lips')
 introText.append('animations are at .375 speed')
-introText.append('source: Westbury, J.R. (1994)  X-ray Microbeam Speech Production Database User’s Handbook. Waisman Center')
+introText.append('source: Westbury, J.R. (1994) X-ray Microbeam Speech Production Database User’s Handbook. Waisman Center')
 introText.append('on Mental Retardation and Human Development, University of Wisconsin, Madison, WI.')
 
 # takes and returns [x, y]
