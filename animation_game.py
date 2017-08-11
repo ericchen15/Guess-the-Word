@@ -2,8 +2,6 @@ import pygame
 import pandas as pd
 import audiolabel as al
 import re
-import sys
-import misc_lists as ml
 import random
 
 width = 900
