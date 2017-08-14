@@ -237,8 +237,6 @@ function score(){
 
 function intro(){
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	context.fillStyle = 'red';
-	context.fillRect(0, 0, canvas.width, canvas.height);
 	context.fillStyle = 'black';
 	context.font = '80px Arial';
 	context.textAlign = 'center';
