@@ -6,7 +6,7 @@ var mouseY = 0;
 var click = false;
 
 const root = 'https://raw.githubusercontent.com/ericchen15/Guess-the-Word/master/';
-var speaker = root + 'JW63/';
+const speakers = ['JW62/', 'JW63/'];
 
 var sel = [];
 var options = [];
@@ -20,10 +20,10 @@ var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAni
 
 introText = [];
 introText.push('made by: Eric Chen')
-introText.push('black line: pharyngeal wall')
-introText.push('black curve: palate')
+introText.push('black line: pharyngeal wall (back of throat)')
+introText.push('black curve: palate (roof of mouth)')
 introText.push('blue: tongue')
-introText.push('red: mandible')
+introText.push('red: mandible (jawbone)')
 introText.push('green: lips')
 introText.push('source: Westbury, J.R. (1994)  X-ray Microbeam Speech Production Database User\'s Handbook. Waisman Center')
 introText.push('on Mental Retardation and Human Development, University of Wisconsin, Madison, WI.')
@@ -305,6 +305,8 @@ function addEvent(element, eventName, callback){
 }
 
 var wordTasks = read_csv(root + 'word_task_list.txt', '\t');
+
+var speaker = root + speakers[1];
 var pal = stringsToInts(read_csv(speaker + 'PAL.csv', ','));
 var pha = stringsToInts(read_csv(speaker + 'PHA.csv', ','));
 
