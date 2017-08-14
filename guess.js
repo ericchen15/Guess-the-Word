@@ -19,6 +19,7 @@ var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAni
                             window.webkitRequestAnimationFrame || window.msRequestAnimationGFrame;
 
 introText = [];
+introText.push('made by: Eric Chen')
 introText.push('black line: pharyngeal wall')
 introText.push('black curve: palate')
 introText.push('blue: tongue')
@@ -227,10 +228,14 @@ function score(){
 function intro(){
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	context.fillStyle = 'black';
+	context.font = '80px Arial';
+	context.textAlign = 'center';
+	context.fillText('Guess the Word', canvas.width / 2, 100);
+
 	context.font = '16px Arial';
 	context.textAlign = 'left';
 	for (i = 0; i < introText.length; i++){
-		context.fillText(introText[i], 20, 20 + (30 * i));
+		context.fillText(introText[i], 20, 150 + (30 * i));
 	}
 	buttonClick = button('begin', (canvas.width / 2) - 100, 400, 200, 100, 'cyan', 'deepskyblue', 40);
 
