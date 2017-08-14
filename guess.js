@@ -11,8 +11,8 @@ var speaker = root + 'JW63/';
 var sel = [];
 var options = [];
 var correctIndex = -1;
+var clickIndex = -1;
 var numCorrect = 0;
-var correct = false;
 var total = 0;
 var frame = 0;
 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -123,14 +123,27 @@ function button(msg, x, y, w, h, ic, ac, fontSize = 20){
 }
 
 function optionButtons(){
-	var locations = [[20, 420], [(canvas.width / 2) + 20, 420], [20, 520], [(canvas.width / 2) + 20, 520]];
-	var clickIndex = -1;
+	var locations = [[20, 420], [320, 420], [20, 520], [320, 520]];
 	for (i = 0; i < options.length; i++) {
-		if (button(options[i], locations[i][0], locations[i][1], 300, 60, 'lime', 'green', 40)){
+		if (button(options[i], locations[i][0], locations[i][1], 250, 60, 'gold', 'orange', 40)){
 			clickIndex = i;
 		}
 	}
-	return clickIndex;
+}
+
+function optionRects(){
+	var locations = [[20, 420], [320, 420], [20, 520], [320, 520]];
+	var color;
+	for (i = 0; i < options.length; i++) {
+		if (i == correctIndex){
+			color = 'lime';
+		} else if (i == clickIndex){
+			color = 'red';
+		} else {
+			color = 'gold';
+		}
+		button(options[i], locations[i][0], locations[i][1], 250, 60, color, color, 40);
+	}
 }
 
 function randomElement(arr){
@@ -219,7 +232,7 @@ function intro(){
 	for (i = 0; i < introText.length; i++){
 		context.fillText(introText[i], 20, 20 + (30 * i));
 	}
-	buttonClick = button('begin', (canvas.width / 2) - 100, 400, 200, 100, 'lime', 'green', 40);
+	buttonClick = button('begin', (canvas.width / 2) - 100, 400, 200, 100, 'cyan', 'deepskyblue', 40);
 
 	click = false;
 	if (buttonClick){
@@ -236,12 +249,15 @@ function animate(){
 	if (15 <= frame && frame < 15 + sel.length){
 		drawMoving(sel[frame - 15]);
 	}
-	clickIndex = optionButtons();
 	score();
+	optionButtons();
 
 	click = false;
 	if (clickIndex >= 0){
-		correct = (clickIndex == correctIndex);
+		if (clickIndex == correctIndex){
+			numCorrect++;
+		}
+		total++;
 		answer();
 		return;
 	}
@@ -253,24 +269,24 @@ function animate(){
 
 function answer(){
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	var text;
-	if (correct){
-		text = 'Correct!'
-	} else {
-		text = 'The correct answer was ' + options[correctIndex];
+	drawPalPha();
+	if (15 <= frame && frame < 15 + sel.length){
+		drawMoving(sel[frame - 15]);
 	}
-	context.fillText(text, canvas.width / 2, 100);
-	buttonClick = button('next', (canvas.width / 2) - 100, 400, 200, 100, 'lime', 'green', 40);
+	score();
+	optionRects();
+	buttonClick = button('next', 620, 420, 250, 60, 'cyan', 'deepskyblue', 40);
 
 	click = false;
 	if (buttonClick){
 		newWord();
+		frame = 0;
+		clickIndex = -1;
 		animate();
-		total++;
-		if (correct){
-			numCorrect++;
-		}
 		return;
+	}
+	if (frame++ >= sel.length + 30){
+		frame = 0;
 	}
 	requestAnimationFrame(answer);
 }
