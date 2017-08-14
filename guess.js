@@ -275,6 +275,14 @@ function answer(){
 	requestAnimationFrame(answer);
 }
 
+function addEvent(element, eventName, callback){
+	if (element.addEventListener) {
+		element.addEventListener(eventName, callback);
+	} else if (element.attachEvent) {
+		element.attachEvent('on' + eventName, callback);
+	}
+}
+
 var wordTasks = read_csv(root + 'word_task_list.txt', '\t');
 var pal = stringsToInts(read_csv(speaker + 'PAL.csv', ','));
 var pha = stringsToInts(read_csv(speaker + 'PHA.csv', ','));
@@ -287,13 +295,13 @@ var scale = 360 / (yMax - yMin);
 var palPoints = pal.map(changeBasis);
 var phaPoints = pha.map(changeBasis);
 
-document.addEventListener('click', function(){
+addEvent(document, 'click', function(e){
 	click = true;
 });
 
-document.addEventListener('mousemove', function(){
-	mouseX = event.pageX;
-	mouseY = event.pageY;
+addEvent(document, 'mousemove', function(e){
+	mouseX = e.pageX;
+	mouseY = e.pageY;
 });
 
 intro();
