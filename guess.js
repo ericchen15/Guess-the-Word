@@ -18,6 +18,15 @@ var frame = 0;
 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                             window.webkitRequestAnimationFrame || window.msRequestAnimationGFrame;
 
+const wordTasks = read_csv(root + 'word_task_list.txt', '\t');
+var speaker;
+var xMin;
+var yMin;
+var yMax;
+var scale;
+var palPoints;
+var phaPoints;
+
 introText = [];
 introText.push('made by: Eric Chen')
 introText.push('black line: pharyngeal wall (back of throat)')
@@ -25,8 +34,8 @@ introText.push('black curve: palate (roof of mouth)')
 introText.push('blue: tongue')
 introText.push('red: mandible (jawbone)')
 introText.push('green: lips')
-introText.push('source: Westbury, J.R. (1994)  X-ray Microbeam Speech Production Database User\'s Handbook. Waisman Center')
-introText.push('on Mental Retardation and Human Development, University of Wisconsin, Madison, WI.')
+introText.push('source: Westbury, J.R. (1994)  X-ray Microbeam Speech Production Database User\'s Handbook. Waisman Center on Mental')
+introText.push('Retardation and Human Development, University of Wisconsin, Madison, WI.')
 
 function getText(url){
 	var text;
@@ -152,6 +161,7 @@ function randomElement(arr){
 }
 
 function newWord(){
+	newSpeaker();
 	var repeat = true;
 	while (repeat){
 		var rand = randomElement(wordTasks);
@@ -227,6 +237,8 @@ function score(){
 
 function intro(){
 	context.clearRect(0, 0, canvas.width, canvas.height);
+	context.fillStyle = 'red';
+	context.fillRect(0, 0, canvas.width, canvas.height);
 	context.fillStyle = 'black';
 	context.font = '80px Arial';
 	context.textAlign = 'center';
@@ -304,19 +316,19 @@ function addEvent(element, eventName, callback){
 	}
 }
 
-var wordTasks = read_csv(root + 'word_task_list.txt', '\t');
+function newSpeaker(){
+	speaker = root + randomElement(speakers);
+	var pal = stringsToInts(read_csv(speaker + 'PAL.csv', ','));
+	var pha = stringsToInts(read_csv(speaker + 'PHA.csv', ','));
 
-var speaker = root + speakers[1];
-var pal = stringsToInts(read_csv(speaker + 'PAL.csv', ','));
-var pha = stringsToInts(read_csv(speaker + 'PHA.csv', ','));
+	xMin = Math.min(...getColumn(pha, 0));
+	yMin = Math.min(...getColumn(pha, 1));
+	yMax = Math.max(...getColumn(pal, 1));
+	scale = 360 / (yMax - yMin);
 
-var xMin = Math.min(...getColumn(pha, 0));
-var yMin = Math.min(...getColumn(pha, 1));
-var yMax = Math.max(...getColumn(pal, 1));
-var scale = 360 / (yMax - yMin);
-
-var palPoints = pal.map(changeBasis);
-var phaPoints = pha.map(changeBasis);
+	palPoints = pal.map(changeBasis);
+	phaPoints = pha.map(changeBasis);
+}
 
 addEvent(document, 'click', function(e){
 	click = true;
