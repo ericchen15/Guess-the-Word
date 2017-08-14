@@ -34,8 +34,8 @@ introText.push('black curve: palate (roof of mouth)')
 introText.push('blue: tongue')
 introText.push('red: mandible (jawbone)')
 introText.push('green: lips')
-introText.push('source: Westbury, J.R. (1994)  X-ray Microbeam Speech Production Database User\'s Handbook. Waisman Center on Mental')
-introText.push('Retardation and Human Development, University of Wisconsin, Madison, WI.')
+introText.push('source: Westbury, J.R. (1994)  X-ray Microbeam Speech Production Database User\'s Handbook. Waisman Center on')
+introText.push('Mental Retardation and Human Development, University of Wisconsin, Madison, WI.')
 
 function getText(url){
 	var text;
@@ -322,7 +322,7 @@ function newSpeaker(){
 	xMin = Math.min(...getColumn(pha, 0));
 	yMin = Math.min(...getColumn(pha, 1));
 	yMax = Math.max(...getColumn(pal, 1));
-	scale = 360 / (yMax - yMin);
+	scale = 330 / (yMax - yMin);
 
 	palPoints = pal.map(changeBasis);
 	phaPoints = pha.map(changeBasis);
