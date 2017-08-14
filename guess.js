@@ -12,6 +12,7 @@ var sel = [];
 var options = [];
 var correctIndex = -1;
 var numCorrect = 0;
+var correct = false;
 var total = 0;
 var frame = 0;
 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -240,8 +241,8 @@ function animate(){
 
 	click = false;
 	if (clickIndex >= 0){
-		var correct = (correctIndex == clickIndex);
-		answer(correct);
+		correct = (clickIndex == correctIndex);
+		answer();
 		return;
 	}
 	if (frame++ >= sel.length + 30){
@@ -250,7 +251,7 @@ function animate(){
 	requestAnimationFrame(animate);
 }
 
-function answer(correct){
+function answer(){
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	var text;
 	if (correct){
