@@ -8,6 +8,7 @@ var click = false;
 const root = 'https://raw.githubusercontent.com/ericchen15/Guess-the-Word/master/';
 const speakers = ['JW62/', 'JW63/'];
 
+var locations = [[20, 460], [320, 460], [20, 530], [320, 530]];
 var sel = [];
 var options = [];
 var correctIndex = -1;
@@ -128,21 +129,19 @@ function button(msg, x, y, w, h, ic, ac, fontSize = 20){
 	context.fillStyle = 'black';
 	context.font = fontSize + 'px Arial';
 	context.textAlign = 'center';
-	context.fillText(msg, x + (w / 2), y + (h / 2) + (fontSize / 4));
+	context.fillText(msg, x + (w / 2), y + (h / 2) + (fontSize / 3));
 	return buttonClick;
 }
 
 function optionButtons(){
-	var locations = [[20, 420], [320, 420], [20, 520], [320, 520]];
 	for (i = 0; i < options.length; i++) {
-		if (button(options[i], locations[i][0], locations[i][1], 250, 60, 'gold', 'orange', 40)){
+		if (button(options[i], locations[i][0], locations[i][1], 250, 50, 'gold', 'orange', 40)){
 			clickIndex = i;
 		}
 	}
 }
 
 function optionRects(){
-	var locations = [[20, 420], [320, 420], [20, 520], [320, 520]];
 	var color;
 	for (i = 0; i < options.length; i++) {
 		if (i == correctIndex){
@@ -152,7 +151,7 @@ function optionRects(){
 		} else {
 			color = 'gold';
 		}
-		button(options[i], locations[i][0], locations[i][1], 250, 60, color, color, 40);
+		button(options[i], locations[i][0], locations[i][1], 250, 50, color, color, 40);
 	}
 }
 
@@ -290,7 +289,7 @@ function answer(){
 	}
 	score();
 	optionRects();
-	buttonClick = button('next', 620, 420, 250, 60, 'cyan', 'deepskyblue', 40);
+	buttonClick = button('next', 620, 460, 250, 50, 'cyan', 'deepskyblue', 40);
 
 	click = false;
 	if (buttonClick){
