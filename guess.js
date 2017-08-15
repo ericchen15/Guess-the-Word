@@ -6,7 +6,7 @@ var mouseY = 0;
 var click = false;
 
 const root = 'https://raw.githubusercontent.com/ericchen15/Guess-the-Word/master/';
-const speakers = ['JW62/', 'JW63/'];
+const speakers = [['JW61/', 240], ['JW62/', 330], ['JW63/', 350]];
 
 var locations = [[20, 460], [320, 460], [20, 530], [320, 530]];
 var sel = [];
@@ -16,11 +16,12 @@ var clickIndex = -1;
 var numCorrect = 0;
 var total = 0;
 var frame = 0;
+var sound;
 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                             window.webkitRequestAnimationFrame || window.msRequestAnimationGFrame;
 
 const wordTasks = read_csv(root + 'word_task_list.txt', '\t');
-var speaker;
+var jwdir;
 var xMin;
 var yMin;
 var yMax;
@@ -165,10 +166,10 @@ function newWord(){
 	while (repeat){
 		var rand = randomElement(wordTasks);
 		var word = rand[0];
-		var task = speaker + rand[1];
+		var task = rand[1];
 
-		var txy = stringsToInts(read_csv(task + '.txy', '\t'));
-		var tg = getText(task + '.TextGrid');
+		var txy = stringsToInts(read_csv(root + jwdir + task + '.txy', '\t'));
+		var tg = getText(root + jwdir + task + '.TextGrid');
 
 		var times = wordToTimes(word, tg);
 		if (times[0] >= 0 && times[1] >= 0){
@@ -177,7 +178,7 @@ function newWord(){
 			for (i = 0; i < txy.length; i++) {
 				var row = txy[i];
 				var secs = row[0] / 1000000;
-				if (times[0] - .1 < secs && secs < times[1] + .1){
+				if (times[0] - .00 < secs && secs < times[1] + .00){
 					if (row.indexOf(1000000) != -1){
 						repeat = true;
 					} else {
@@ -188,21 +189,38 @@ function newWord(){
 		}
 	}
 	makeOptions(word);
+	newSound(task);
+}
+
+function newSound(task){
+	sound = document.createElement('AUDIO');
+	sound.src = jwdir + task + '.wav';
+	sound.currentTime = sel[0][0] / 1000000;
+}
+
+function checkPause(){
+	if (sound.currentTime > sel[sel.length - 1][0] / 1000000){
+		sound.pause();
+	}
 }
 
 function wordToTimes(word, tg){
-	var t1 = -1;
-	var t2 = -1;
+	var timeList = [];
 	var lines = tg.split('\n');
 	for (i = 2; i < lines.length; i++) {
-		if (lines[i].includes('text') && lines[i].includes(word.toUpperCase())){
+		if (lines[i].includes('text') && lines[i].includes('\"' + word.toUpperCase() + '\"')){
 			var t1Line = lines[i - 2].replace(/\s+/, '').split('=');
-			t1 = parseFloat(t1Line[t1Line.length - 1]);
+			var t1 = parseFloat(t1Line[t1Line.length - 1]);
 			var t2Line = lines[i - 1].replace(/\s+/, '').split('=');
-			t2 = parseFloat(t2Line[t2Line.length - 1]);
+			var t2 = parseFloat(t2Line[t2Line.length - 1]);
+			timeList.push([t1, t2]);
 		}
 	}
-	return [t1, t2];
+	if (timeList.length > 0){
+		return randomElement(timeList);
+	} else {
+		return [-1, -1];
+	}
 }
 
 function makeOptions(word){
@@ -272,6 +290,7 @@ function animate(){
 			numCorrect++;
 		}
 		total++;
+		sound.play();
 		answer();
 		return;
 	}
@@ -302,6 +321,7 @@ function answer(){
 	if (frame++ >= sel.length + 30){
 		frame = 0;
 	}
+	checkPause();
 	requestAnimationFrame(answer);
 }
 
@@ -314,14 +334,15 @@ function addEvent(element, eventName, callback){
 }
 
 function newSpeaker(){
-	speaker = root + randomElement(speakers);
-	var pal = stringsToInts(read_csv(speaker + 'PAL.csv', ','));
-	var pha = stringsToInts(read_csv(speaker + 'PHA.csv', ','));
+	randSpeaker = randomElement(speakers);
+	jwdir = randSpeaker[0];
+	var pal = stringsToInts(read_csv(root + jwdir + 'PAL.csv', ','));
+	var pha = stringsToInts(read_csv(root + jwdir + 'PHA.csv', ','));
 
 	xMin = Math.min(...getColumn(pha, 0));
 	yMin = Math.min(...getColumn(pha, 1));
-	yMax = Math.max(...getColumn(pal, 1));
-	scale = 330 / (yMax - yMin);
+	yMax = Math.max(...getColumn(pal, 1).concat(getColumn(pha, 1)));
+	scale = randSpeaker[1] / (yMax - yMin);
 
 	palPoints = pal.map(changeBasis);
 	phaPoints = pha.map(changeBasis);
