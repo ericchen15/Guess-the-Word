@@ -6,7 +6,8 @@ var mouseY = 0;
 var click = false;
 
 const root = 'https://raw.githubusercontent.com/ericchen15/Guess-the-Word/master/';
-const speakers = [['JW61/', 240], ['JW62/', 330], ['JW63/', 350]];
+//const speakers = [['JW60/', 340], ['JW61/', 240], ['JW62/', 330], ['JW63/', 350]];
+const speakers = [['JW60/', 330]];
 
 var locations = [[20, 460], [320, 460], [20, 530], [320, 530]];
 var sel = [];
@@ -313,6 +314,7 @@ function answer(){
 
 	click = false;
 	if (buttonClick){
+		sound.pause();
 		newWord();
 		frame = 0;
 		clickIndex = -1;
