@@ -112,6 +112,7 @@ function drawMoving(row){
 	var jaw = [changeBasis(paired[6]), changeBasis(paired[7])];
 
 	drawLine(tongue, 'blue');
+	drawLine(jaw, 'red');
 	drawPoints(tongue, 'blue', 3);
 	drawPoints(jaw, 'red', 3);
 	drawPoints(lips, 'green', 3);
@@ -178,7 +179,7 @@ function newWord(){
 			for (i = 0; i < txy.length; i++) {
 				var row = txy[i];
 				var secs = row[0] / 1000000;
-				if (times[0] - .00 < secs && secs < times[1] + .00){
+				if (times[0] - .10 < secs && secs < times[1] + .10){
 					if (row.indexOf(1000000) != -1){
 						repeat = true;
 					} else {
@@ -194,8 +195,7 @@ function newWord(){
 
 function newSound(task){
 	sound = document.createElement('AUDIO');
-	sound.src = jwdir + task + '.wav';
-	sound.currentTime = sel[0][0] / 1000000;
+	sound.src = root + jwdir + task + '.wav';
 }
 
 function checkPause(){
@@ -290,6 +290,7 @@ function animate(){
 			numCorrect++;
 		}
 		total++;
+		sound.currentTime = sel[0][0] / 1000000;
 		sound.play();
 		answer();
 		return;
