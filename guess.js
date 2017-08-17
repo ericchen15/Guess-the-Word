@@ -6,7 +6,7 @@ var mouseY = 0;
 var click = false;
 
 const root = 'https://raw.githubusercontent.com/ericchen15/Guess-the-Word/master/';
-const speakers = [['JW60/', 330], ['JW61/', 240], ['JW62/', 330], ['JW63/', 350]];
+const speakers = [['JW60/', 320], ['JW61/', 240], ['JW62/', 330], ['JW63/', 350]];
 
 var locations = [[20, 460], [320, 460], [20, 530], [320, 530]];
 var sel = [];
@@ -301,30 +301,75 @@ function animate(){
 	requestAnimationFrame(animate);
 }
 
+function next(){
+	sound.pause();
+	newWord();
+	frame = 0;
+	clickIndex = -1;
+	animate();
+}
+
 function answer(){
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	drawPalPha();
-	if (15 <= frame && frame < 15 + sel.length){
-		drawMoving(sel[frame - 15]);
-	}
 	score();
 	optionRects();
-	buttonClick = button('next', 620, 460, 250, 50, 'cyan', 'deepskyblue', 40);
 
-	click = false;
-	if (buttonClick){
-		sound.pause();
-		newWord();
-		frame = 0;
-		clickIndex = -1;
-		animate();
-		return;
+	if (15 <= frame && frame < 15 + sel.length){
+		drawMoving(sel[frame - 15]);
 	}
 	if (frame++ >= sel.length + 30){
 		frame = 0;
 	}
+
+	nextClick = button('next', 620, 460, 200, 50, 'cyan', 'deepskyblue', 40);
+	syncClick = button('sync', 620, 530, 200, 50, 'cyan', 'deepskyblue', 40);
+	click = false;
+	if (nextClick){
+		next();
+		return;
+	} else if (syncClick){
+		sound.pause();
+		sound.currentTime = sel[0][0] / 1000000;
+		frame = 0;
+		sync();
+		return;
+	}
 	checkPause();
 	requestAnimationFrame(answer);
+}
+
+function sync(){
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	drawPalPha();
+	score();
+	optionRects();
+
+	if (frame == 15){
+		sound.play();
+	}
+	var drawFrame = Math.round((frame - 15) * (8 / 3));
+	if (0 <= drawFrame && drawFrame < sel.length){
+		drawMoving(sel[drawFrame]);
+	}
+	if (frame++ >= (sel.length * 3 / 8) + 30){
+		sound.currentTime = sel[0][0] / 1000000;
+		frame = 0;
+	}
+
+	nextClick = button('next', 620, 460, 200, 50, 'cyan', 'deepskyblue', 40);
+	syncClick = button('sync', 620, 530, 200, 50, 'cyan', 'deepskyblue', 40);
+	click = false;
+	if (nextClick){
+		next();
+		return;
+	} else if (syncClick){
+		frame = 0;
+		answer();
+		return;
+	}
+	checkPause();
+	requestAnimationFrame(sync);
 }
 
 function addEvent(element, eventName, callback){
