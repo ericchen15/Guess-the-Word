@@ -6,7 +6,7 @@ var mouseY = 0;
 var click = false;
 
 const root = 'https://raw.githubusercontent.com/ericchen15/Guess-the-Word/master/';
-const speakers = [['JW60/', 320], ['JW61/', 240], ['JW62/', 330], ['JW63/', 350]];
+const speakers = [['JW60/', 320], ['JW61/', 240], ['JW62/', 320], ['JW63/', 380]];
 
 var locations = [[20, 460], [320, 460], [20, 530], [320, 530]];
 var sel = [];
@@ -16,7 +16,8 @@ var clickIndex = -1;
 var numCorrect = 0;
 var total = 0;
 var frame = 0;
-var sound;
+var sound = document.createElement('AUDIO');
+var soundPrimed = false;
 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                             window.webkitRequestAnimationFrame || window.msRequestAnimationGFrame;
 
@@ -194,8 +195,10 @@ function newWord(){
 }
 
 function newSound(task){
-	sound = document.createElement('AUDIO');
 	sound.src = root + jwdir + task + '.wav';
+	sound.load();
+	sound.muted = true;
+	sound.play();
 }
 
 function checkPause(){
@@ -290,7 +293,9 @@ function animate(){
 			numCorrect++;
 		}
 		total++;
+		sound.pause();
 		sound.currentTime = sel[0][0] / 1000000;
+		sound.muted = false;
 		sound.play();
 		answer();
 		return;
@@ -397,6 +402,11 @@ function newSpeaker(){
 
 addEvent(document, 'click', function(e){
 	click = true;
+	if (!soundPrimed){
+		sound.play();
+		sound.pause();
+		soundPrimed = true;
+	}
 });
 
 addEvent(document, 'mousemove', function(e){
