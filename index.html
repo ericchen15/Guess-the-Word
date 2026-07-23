@@ -4,16 +4,15 @@
 	<title>Guess the Word</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="color-scheme" content="light">
 	<style>
-		body { margin: 0; }
-		canvas { display: block; width: 100%; max-width: 900px; height: auto; margin: 0 auto; }
+		html, body { margin: 0; height: 100%; background: white; }
+		body { display: flex; align-items: center; justify-content: center; }
+		canvas { display: block; max-width: 100vw; max-height: 100vh; width: auto; height: auto; }
 	</style>
 </head>
 
 <body>
-	<!-- TEMPORARY: debug console for diagnosing mobile load issue, remove after -->
-	<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-	<script>eruda.init();</script>
 	<canvas id="guess" width="900" height="600" onclick="void(0)"></canvas>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/gh/evanplaice/jquery-csv@109ae716/src/jquery.csv.js"></script>
