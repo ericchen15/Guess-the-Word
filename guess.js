@@ -410,8 +410,9 @@ addEvent(document, 'click', function(e){
 });
 
 addEvent(document, 'mousemove', function(e){
-	mouseX = e.pageX;
-	mouseY = e.pageY;
+	var rect = canvas.getBoundingClientRect();
+	mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+	mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
 });
 
 intro();
